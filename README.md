@@ -1,5 +1,113 @@
 # BuyWise — Sistem Fuzzy Mamdani
-> Penentu Kelayakan Pembelian Barang berbasis Logika Fuzzy Mamdani
+### Penentu Kelayakan Pembelian Barang
+
+> Dibuat sebagai bagian dari Responsi Kecerdasan Buatan — Semester 4
+
+---
+
+## 🌸 Tentang Aplikasi
+
+**BuyWise** adalah sistem berbasis logika fuzzy yang membantu kamu mengevaluasi apakah sebuah pembelian layak dilakukan atau hanya sekadar keinginan sesaat. Cukup masukkan tiga informasi sederhana, dan sistem akan memberikan rekomendasi berdasarkan analisis fuzzy secara otomatis.
+
+Aplikasi ini dibangun dengan pendekatan **Fuzzy Mamdani** — salah satu metode inferensi fuzzy paling populer yang meniru cara manusia berpikir dalam kondisi yang tidak pasti.
+
+---
+
+## 🧠 Penjelasan Sistem
+
+### Apa itu Logika Fuzzy?
+
+Logika fuzzy adalah cabang kecerdasan buatan yang memungkinkan komputer berpikir dalam kondisi **tidak pasti atau abu-abu** — seperti manusia. Tidak semua keputusan bisa dijawab "ya" atau "tidak"; logika fuzzy menjembatani kondisi di antaranya.
+
+Contoh: apakah harga Rp150.000 itu "murah" atau "mahal"? Jawabannya tergantung konteks. Logika fuzzy menangani ketidakpastian ini dengan **derajat keanggotaan** (nilai 0 hingga 1).
+
+---
+
+### Metode: Mamdani
+
+Sistem ini menggunakan **Metode Inferensi Mamdani**, yang terdiri dari empat tahap utama:
+
+```
+Input Numerik → Fuzzifikasi → Inferensi Rule → Defuzzifikasi → Output Numerik
+```
+
+**1. Fuzzifikasi**
+Nilai input numerik diubah menjadi derajat keanggotaan dalam himpunan fuzzy menggunakan fungsi keanggotaan **segitiga** dan **trapesium**.
+
+**2. Inferensi Rule (Rule Base)**
+Sistem memiliki **14 aturan IF-THEN** yang meniru penalaran pakar. Setiap rule dievaluasi menggunakan operator MIN (AND), dan hasilnya digabungkan dengan operator MAX.
+
+**3. Defuzzifikasi**
+Output fuzzy diubah kembali menjadi nilai numerik menggunakan metode **Centroid (Weighted Average)**:
+
+```
+z* = Σ(wi × ci) / Σ(wi)
+```
+
+di mana `wi` adalah bobot rule yang aktif dan `ci` adalah centroid himpunan output.
+
+---
+
+### Variabel Input
+
+| Variabel | Rentang | Himpunan Fuzzy |
+|---|---|---|
+| Rasio Harga / Saldo | 0 – 100% | Rendah, Sedang, Tinggi |
+| Frekuensi Pemakaian | 0 – 7 kali/minggu | Jarang, Kadang, Sering |
+| Urgensi Kebutuhan | 1 – 10 | Rendah, Sedang, Tinggi |
+
+### Variabel Output
+
+| Kategori | Rentang Skor | Centroid |
+|---|---|---|
+| Jangan Beli | 0 – 30 | 15 |
+| Pertimbangkan | 20 – 60 | 40 |
+| Layak Dibeli | 60 – 100 | 80 |
+
+---
+
+### Fungsi Keanggotaan
+
+**Fungsi Trapesium** — digunakan untuk himpunan di tepi (Rendah & Tinggi):
+```
+         _______
+        /       \
+_______/         \_______
+   a   b         c   d
+```
+
+**Fungsi Segitiga** — digunakan untuk himpunan di tengah (Sedang):
+```
+           /\
+          /  \
+_________/    \_________
+     a    b    c
+```
+
+---
+
+### Contoh Rule
+
+```
+R1 : IF harga TINGGI AND frekuensi JARANG AND urgensi RENDAH  → JANGAN BELI
+R5 : IF harga TINGGI AND frekuensi SERING AND urgensi TINGGI  → LAYAK DIBELI
+R9 : IF harga SEDANG AND frekuensi KADANG AND urgensi TINGGI  → LAYAK DIBELI
+R11: IF harga RENDAH AND frekuensi KADANG AND urgensi SEDANG  → LAYAK DIBELI
+```
+
+Total: **14 aturan IF-THEN**
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+| Komponen | Teknologi |
+|---|---|
+| Backend | Python + Flask |
+| Frontend | HTML, CSS, JavaScript |
+| Template Engine | Jinja2 |
+| Hosting | Vercel |
+| Logika Fuzzy | Implementasi manual (tanpa library eksternal) |
 
 ---
 
@@ -7,132 +115,31 @@
 
 ```
 buywise/
-├── app.py              ← Entry point Flask
-├── fuzzy_engine.py     ← Logika fuzzy Mamdani (murni Python)
-├── requirements.txt    ← Dependencies
-├── vercel.json         ← Konfigurasi deploy Vercel
+├── app.py              ← Entry point Flask & routing API
+├── fuzzy_engine.py     ← Implementasi logika Fuzzy Mamdani
+├── requirements.txt    ← Daftar dependencies Python
+├── vercel.json         ← Konfigurasi hosting Vercel
 ├── templates/
-│   └── index.html      ← Tampilan utama (Jinja2)
+│   └── index.html      ← Halaman utama (Jinja2)
 └── static/
-    ├── css/
-    │   └── style.css   ← Semua styling
-    └── js/
-        └── main.js     ← Frontend logic (fetch API)
+    ├── css/style.css   ← Styling antarmuka
+    └── js/main.js      ← Logika frontend & komunikasi API
 ```
 
 ---
 
-## 🚀 Cara Menjalankan Lokal (VS Code)
+## 🔗 Cara Menggunakan Aplikasi
 
-### 1. Buka project di VS Code
-```bash
-cd buywise
-```
+1. Buka aplikasi melalui link yang tersedia
+2. Atur **slider Rasio Harga** — seberapa besar harga barang dibanding saldo kamu
+3. Atur **slider Frekuensi Pemakaian** — seberapa sering kamu akan memakai barang ini
+4. Atur **slider Urgensi** — seberapa mendesak kebutuhan kamu terhadap barang ini
+5. Klik tombol **"Cek Sekarang"**
+6. Sistem akan menampilkan:
+   - Rekomendasi keputusan (Jangan Beli / Pertimbangkan / Layak Dibeli)
+   - Skor kelayakan 0–100
+   - Nilai keanggotaan fuzzy tiap variabel
+   - Saran yang relevan
 
-### 2. Buat virtual environment
-```bash
-python -m venv venv
-```
 
-### 3. Aktifkan virtual environment
-```bash
-# Windows
-venv\Scripts\activate
-
-# Mac / Linux
-source venv/bin/activate
-```
-
-### 4. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Jalankan Flask
-```bash
-python app.py
-```
-
-### 6. Buka di browser
-```
-http://127.0.0.1:5000
-```
-
----
-
-## ☁️ Cara Deploy ke Vercel
-
-### Prasyarat
-- Akun [Vercel](https://vercel.com) (gratis)
-- Akun [GitHub](https://github.com)
-- [Vercel CLI](https://vercel.com/docs/cli) (opsional)
-
----
-
-### Langkah 1 — Upload project ke GitHub
-
-1. Buka [github.com](https://github.com) → **New repository**
-2. Beri nama repo, misal: `buywise-fuzzy`
-3. Klik **Create repository**
-4. Di terminal VS Code, jalankan:
-
-```bash
-git init
-git add .
-git commit -m "first commit: BuyWise Fuzzy Mamdani"
-git branch -M main
-git remote add origin https://github.com/USERNAME/buywise-fuzzy.git
-git push -u origin main
-```
-
-> Ganti `USERNAME` dengan username GitHub kamu.
-
----
-
-### Langkah 2 — Import ke Vercel
-
-1. Buka [vercel.com](https://vercel.com) → Login
-2. Klik **Add New → Project**
-3. Pilih repository `buywise-fuzzy` dari GitHub
-4. Klik **Import**
-5. Pada bagian **Framework Preset** → pilih **Other**
-6. Klik **Deploy**
-
-Vercel akan otomatis mendeteksi `vercel.json` dan mendeploy Flask app kamu.
-
----
-
-### Langkah 3 — Selesai! 🎉
-
-Setelah deploy berhasil, kamu akan mendapatkan URL seperti:
-```
-https://buywise-fuzzy.vercel.app
-```
-
-URL ini bisa langsung dikumpulkan ke form responsi!
-
----
-
-## 🔁 Update Setelah Deploy
-
-Setiap kali kamu push ke GitHub, Vercel akan otomatis redeploy:
-```bash
-git add .
-git commit -m "update: ..."
-git push
-```
-
----
-
-## 🧠 Tentang Sistem
-
-| Komponen     | Detail                              |
-|--------------|-------------------------------------|
-| Metode       | Fuzzy Mamdani                       |
-| Input 1      | Rasio Harga/Saldo (0–100%)          |
-| Input 2      | Frekuensi Pemakaian (0–7 kali/minggu)|
-| Input 3      | Urgensi Kebutuhan (1–10)            |
-| Fungsi MF    | Segitiga & Trapesium                |
-| Rule Base    | 14 aturan IF-THEN                   |
-| Defuzzifikasi| Centroid (Weighted Average)         |
-| Output       | Jangan Beli / Pertimbangkan / Layak |
+*Responsi Kecerdasan Buatan 2026*
