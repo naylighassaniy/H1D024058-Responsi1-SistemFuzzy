@@ -140,6 +140,6 @@ buywise/
    - Skor kelayakan 0–100
    - Nilai keanggotaan fuzzy tiap variabel
    - Saran yang relevan
-
+Link: buywise-fuzzy.vercel.app
 
 *Responsi Kecerdasan Buatan 2026*
