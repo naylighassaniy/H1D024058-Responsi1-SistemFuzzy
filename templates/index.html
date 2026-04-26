@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuyWise — Sistem Fuzzy Mamdani</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-badge">✦ Sistem Fuzzy Mamdani ✦</div>
+    <h1>Buy<em>Wise</em></h1>
+    <p>Sebelum kamu checkout, cek dulu — apakah pembelian ini layak atau cuma nafsu sesaat?</p>
+    <div class="deco-line">✦</div>
+  </div>
+
+  <!-- ── INFO BOX ── -->
+  <div class="info-box">
+    <strong>Cara kerja:</strong> Sistem ini menggunakan logika fuzzy <strong>Mamdani</strong> dengan
+    3 variabel input dan menghasilkan rekomendasi berdasarkan aturan IF-THEN fuzzy.
+    Nilai keanggotaan dihitung menggunakan fungsi segitiga &amp; trapesium,
+    lalu didefuzzifikasi dengan metode <strong>Centroid</strong>.
+  </div>
+
+  <!-- ── INPUT: Rasio Harga ── -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">💸</span>
+      Harga Barang vs Saldo
+    </div>
+    <p class="card-desc">Seberapa besar harga barang dibanding saldo tabunganmu? (0% = sangat murah, 100% = sebesar seluruh saldo)</p>
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>Rasio Harga / Saldo</span>
+        <span class="slider-value" id="val1">30%</span>
+      </div>
+      <input type="range" id="s1" min="0" max="100" value="30" />
+      <div class="slider-hint">
+        <span>0% — sangat murah</span>
+        <span>100% — sebesar saldo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INPUT: Frekuensi ── -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">📅</span>
+      Frekuensi Pemakaian
+    </div>
+    <p class="card-desc">Berapa kali per minggu kamu akan memakai barang ini?</p>
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>Frekuensi (kali/minggu)</span>
+        <span class="slider-value" id="val2">3×</span>
+      </div>
+      <input type="range" id="s2" min="0" max="7" value="3" />
+      <div class="slider-hint">
+        <span>0 — tidak pernah</span>
+        <span>7 — setiap hari</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INPUT: Urgensi ── -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">💭</span>
+      Urgensi Kebutuhan
+    </div>
+    <p class="card-desc">Seberapa mendesak kamu membutuhkan barang ini? (1 = iseng pengen aja, 10 = sangat butuh)</p>
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>Tingkat Urgensi</span>
+        <span class="slider-value" id="val3">5</span>
+      </div>
+      <input type="range" id="s3" min="1" max="10" value="5" />
+      <div class="slider-hint">
+        <span>1 — iseng/pengen aja</span>
+        <span>10 — sangat butuh</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOMBOL CEK ── -->
+  <button class="btn-check" id="btnCheck" onclick="hitung()">
+    ✦ Cek Sekarang ✦
+  </button>
+
+  <!-- ── HASIL ── -->
+  <div class="result-card" id="resultCard">
+    <div class="result-label">Hasil Analisis Fuzzy Mamdani</div>
+    <div class="result-verdict" id="resultVerdict"></div>
+    <div class="result-score-row">
+      <div class="result-score-bar-wrap">
+        <div class="result-score-bar" id="scoreBar"></div>
+      </div>
+      <div class="result-score-num" id="scoreNum"></div>
+    </div>
+    <p class="result-desc" id="resultDesc"></p>
+    <div class="result-tips" id="resultTips"></div>
+  </div>
+
+  <!-- ── NILAI KEANGGOTAAN ── -->
+  <div class="mf-section" id="mfSection">
+    <div class="mf-title">
+      <span class="icon" style="width:32px;height:32px;background:var(--rose-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;">📊</span>
+      Nilai Keanggotaan Fuzzy
+    </div>
+    <p class="mf-subtitle">Derajat keanggotaan setiap variabel input terhadap himpunan fuzzy yang terbentuk</p>
+    <div class="mf-grid" id="mfGrid"></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="footer">Sistem Fuzzy Mamdani · BuyWise · Responsi KB 2026</div>
+
+</div>
+
+<!-- ── SCRIPT ── -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
